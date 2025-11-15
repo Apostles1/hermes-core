@@ -1,0 +1,131 @@
+# This starter workflow is for a CMake project running on a single platform. There is a different starter workflow if you need cross-platform coverage.
+# See: https://github.com/actions/starter-workflows/blob/main/ci/cmake-multi-platform.yml
+name: CMake on a single platform
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+env:
+  # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
+  BUILD_TYPE: Release
+
+jobs:
+  build:
+    # The CMake configure and build commands are platform agnostic and should work equally well on Windows or Mac.
+    # You can convert this to a matrix build if you need cross-platform coverage.
+    # See: https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Configure CMake
+      # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
+      # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
+      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+
+    - name: Build
+      # Build your program with the given configuration
+      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}            - name: Teamwork GitHub Sync
+  # You may pin to the exact commit or the version.
+  # uses: Teamwork/github-sync@42dcac69eb5a41fad0d518efeb6aecf1e45f8d01
+  uses: Teamwork/github-sync@v1.3.3
+  with:
+    # GitHub token
+    GITHUB_TOKEN: 
+    # Teamwork URI
+    TEAMWORK_URI: 
+    # Teamwork API token- name: Deploy
+  uses: peaceiris/actions-gh-pages@v4name: Build and Deployname: Build and Deploy
+on: [push]
+permissions:
+  contents: write
+jobs:            - name: Swift test action for Datadog
+  # You may pin to the exact commit or the version.
+  # uses: DataDog/swift-test-action@72dbb684305bfae8f28230a59c02765011937cd4
+  uses: DataDog/swift-test-action@1.0.1
+  with:
+    # Datadog API key
+    api_key: 
+    # Datadog Application key
+    app_key: # optional
+    # (Deprecated) Datadog Application key
+    application_key: # optional
+    # Platform to run: \"ios\", \"macos\" or \"tvos\". By default: \"ios\"
+    platform: # optional, default is ios
+    # .xcworkspace file, if not set, workspace will be autoselected
+    workspace: # optional
+    # .xcodeproj file, if not set, project will be autoselected
+    project: # optional
+    # Scheme to test, if not set, scheme will be autoselected
+    scheme: # optional
+    # Sdk used for building, by default: \"iphonesimulator\" will be used
+    sdk: # optional
+    # Destination for testing, by default: \"platform=iOS Simulator,name=iPhone 13\"
+    destination: # optional
+    # Configuration for testing, by default: \"Debug\"
+    configuration: # optional
+    # Version of the Datagog SDK testing framework to use for testing, by default the latest stable
+    libraryVersion: # optional
+    # These input will be added directly to the build/test command
+    extraParameters: # optional, default is 
+          
+  build-and-deploy:
+    concurrency: ci-${{ github.ref }} # Recommended if you intend to make multiple deployments in quick succession.
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v4
+
+      - name: Install and Build 🔧 # This example project is built using npm and outputs the result to the 'build' folder. Replace with the commands required to build your project, or remove this step entirely if your site is pre-built.
+        run: |
+          npm ci
+          npm run build
+
+      - name: Deploy 🚀
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: build # The folder the action should deploy.
+on: [push]
+permissions:
+  contents: write
+jobs:
+  build-and-deploy:
+    concurrency: ci-${{ github.ref }} # Recommended if you intend to make multiple deployments in quick succession.
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v4
+
+      - name: Install and Build 🔧 # This example project is built using npm and outputs the result to the 'build' folder. Replace with the commands required to build your project, or remove this step entirely if your site is pre-built.
+        run: |
+          npm ci
+          npm run build
+
+      - name: Deploy 🚀
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: build # The folder the action should deploy.
+  with:
+    github_token: ${{ secrets.GITHUB_TOKEN }}
+    publish_dir: ./public
+    TEAMWORK_API_TOKEN: 
+    # Do you want to enable automatic tagging: true/false
+    AUTOMATIC_TAGGING: # optional
+    # The case-sensitive column name of the column you would like the task to be moved to once the PR has been opened
+    BOARD_COLUMN_OPENED: # optional, default is 
+    # The case-sensitive column name of the column you would like the task to be moved to once the PR has been merged
+    BOARD_COLUMN_MERGED: # optional, default is 
+    # The case-sensitive column name of the column you would like the task to be moved to if the PR was closed without being merged
+    BOARD_COLUMN_CLOSED: # optional, default is 
+          
+
+    - name: Test
+      working-directory: ${{github.workspace}}/build
+      # Execute tests defined by the CMake configuration.
+      # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
+      run: ctest -C ${{env.BUILD_TYPE}}
+
